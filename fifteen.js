@@ -1,7 +1,6 @@
 var img = new Image()
 
-
-img.src = "background.jpg"  
+img.src = "puzzle.jpg"  
 var rows = 4 
 var cols = 4 
 var img_width = 400 
@@ -99,8 +98,6 @@ function shuffler(){
 					ok = true
 				}
 			}
-
-  
 		}
 	}
 }
@@ -121,7 +118,6 @@ function check_blank(i,j){
 	if ((i == (cols-1)) && (j == (rows-1))) return true
 	else return false
 }
-
 
 
 

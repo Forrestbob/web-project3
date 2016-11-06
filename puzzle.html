@@ -45,7 +45,7 @@ for(i=0; i < cols; i++)
    for(j=0;j< stop; j++)
    {
      l = Math.round((img_width/cols)*(i));
-     t = Math.round((img_height/rows)*(j)) ;
+     t = Math.round((img_height/rows)*(j));
      id = "i_"+i+"j_"+j
      arr[i][j] = new Array("",l,t,false);
      document.write("<div  style='height:"+Math.round((img_height/rows))+";overflow:hidden;position:absolute;left:"+l+";top:"+t+";z-index:10;width:"+Math.round((img_width/cols))+"' id='"+ id +"' onclick=set('"+this.id+"') ><img src='"+img.src+"' style='position:absolute;top:"+(-t)+";left:"+(-l)+"'></div>")
