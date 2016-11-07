@@ -1,7 +1,7 @@
 
-var mario = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 10];
+var mario = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
-var BACKGROUND = "url('puzzle2.jpg')";
+var BACKGROUND = "url('puzzle.jpg')";
 
 function isAdjacentByIndex(index){
 	//console.log("ENTRY: isAdjacentByIndex");
@@ -119,8 +119,8 @@ function getBackgroundPosition(value){
 	return arr[value];
 }
 
-function getTileValue(position){	//takes in a string such as "23" - row 2 column 3
-	var value = 0;
+function getTileIndex(position){	//takes in a string such as "23" - row 2 column 3
+	var index = 0;					//returns index of mario[]
 	var arr = position.split("");
 	x_dim = parseInt(arr[0]);
 	y_dim = parseInt(arr[1]);
@@ -128,12 +128,12 @@ function getTileValue(position){	//takes in a string such as "23" - row 2 column
 	for (var x = 1; x <= 4; x++){
 		for (var y = 1; y <= 4; y++){
 			if (x == x_dim && y == y_dim){
-				value = i;
+				index = i;
 			}
 			i++;
 		}
 	}
-	return mario[value];
+	return index;
 }
 
 function display(){		//initially display the puzzle in correct order
@@ -156,46 +156,58 @@ function display(){		//initially display the puzzle in correct order
 	temp += "</tr>";
 	document.getElementById("picture").innerHTML = temp;
 	
-	randomize();
+	//randomize();
 	redisplay(); //remove
 	
 	console.log("EXIT: display");
 }
 
 function redisplay(){
-	console.log("ENTRY: redisplay");
+	//console.log("ENTRY: redisplay");
 	var i = 0;
 	for (var x = 1; x <= 4; x++){
 		for (var y = 1; y <= 4; y++){
 			var xy = x.toString() + y.toString();
 			if (mario[i] == 0){		//removing background for empty space
 				document.getElementById(xy).style.backgroundImage = "none";
+				document.getElementById(xy).style.backgroundColor = "black";
 			}
 			else {
 				document.getElementById(xy).style.backgroundImage = BACKGROUND;
 			}
 			
 			var hover = "#" + xy;
+			$(hover).removeClass("clickable");
 			if(isAdjacentByIndex(i)){	//make adjacent tiles clickable and hover
 					$(hover).addClass("clickable");
-			}
-			else {
-				$(hover).removeClass("clickable");
 			}
 			//set background position
 			document.getElementById(xy).style.backgroundPosition = getBackgroundPosition(mario[i]);
 			i++;
 		}
 	}
-	console.log("EXIT: redisplay");
+	
+	$(".clickable").click(function(){	//make adjacent tiles clickable
+		if (isAdjacentByIndex(getTileIndex(this.id))){
+			swapByIndex(getTileIndex(this.id));
+			redisplay();
+			console.log("click!");
+		}
+	});
+	
+	//console.log("EXIT: redisplay");
 }
 
+/*								//only works once
 $(document).ready(function(){
 	$(".clickable").click(function(){
-		console.log(getTileValue(this.id));
+		console.log("click!");
+		//console.log(getTileValue(this.id));
+		swapByIndex(getTileIndex(this.id));
+		redisplay();
 	});
 });
-
+*/
 
 
 
