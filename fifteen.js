@@ -34,41 +34,7 @@ function isAdjacentByIndex(index){
 	return adj;
 }
 
-function isAdjacentByValue(number){
-	
-	var adj = false;
-	var zeroLoc = 0;
-	var index = 0;
-	
-	for (var i = 0; i < mario.length; i++) {
-		if (mario[i] == 0){
-			zeroLoc = i;
-		}
-		if (mario[i] == number){
-			index = i;
-		}
-	}
-	
-	if (index == 3 || index == 7 || index == 11){
-		if (index - zeroLoc == 1 || Math.abs(index - zeroLoc) == 4){			//-4, -1, or +4
-			adj = true;
-		}
-	}
-	else if (index == 4 || index == 8 || index == 12){
-		if (index - zeroLoc == -1 || Math.abs(index - zeroLoc) == 4){			//-4, 1, or +4
-			adj = true;
-		}
-	}
-	else{
-		if (Math.abs(index - zeroLoc) == 1 || Math.abs(index - zeroLoc) == 4){	//-4, -1, +1, or +4
-			adj = true;
-		}
-	}
-	return adj;
-}
-
 function swapByIndex(a){	//swaps an element with the 0 cell by index
-	//console.log("ENTRY: swapByIndex");
 	var zeroLoc = 0;
 	
 	for (var i = 0; i < mario.length; i++) {
@@ -80,7 +46,6 @@ function swapByIndex(a){	//swaps an element with the 0 cell by index
 	
 	mario[zeroLoc] = a_value; 
 	mario[a] = 0;
-	//console.log("EXIT: swapByIndex");
 }
 
 function randomize(){		//this will always create a solvable result
@@ -188,10 +153,6 @@ function display(){		//initially display the puzzle in correct order
 			swapByIndex(getTileIndex(this.id));
 			display();
 			console.log("click!");
-			
-			$(this.id).animate({
-				left: '250px',
-			}, "slow");
 		}
 	});
 	
