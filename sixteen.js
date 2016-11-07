@@ -119,6 +119,23 @@ function getBackgroundPosition(value){
 	return arr[value];
 }
 
+function getTileValue(position){	//takes in a string such as "23" - row 2 column 3
+	var value = 0;
+	var arr = position.split("");
+	x_dim = parseInt(arr[0]);
+	y_dim = parseInt(arr[1]);
+	var i = 0;
+	for (var x = 1; x <= 4; x++){
+		for (var y = 1; y <= 4; y++){
+			if (x == x_dim && y == y_dim){
+				value = i;
+			}
+			i++;
+		}
+	}
+	return mario[value];
+}
+
 function display(){		//initially display the puzzle in correct order
 	console.log("ENTRY: display");
 	var temp = "";
@@ -174,23 +191,9 @@ function redisplay(){
 }
 
 $(document).ready(function(){
-	
 	$(".clickable").click(function(){
-		var i = 0;
-		for (var x = 1; x <= 4; x++){
-			for (var y = 1; y <= 4; y++){
-				var xy = x.toString() + y.toString();
-				console.log(xy);
-				var hover = "#" + xy;
-		
-		
-		
-				i++;
-			}
-		}
-		
+		console.log(getTileValue(this.id));
 	});
-
 });
 
 
