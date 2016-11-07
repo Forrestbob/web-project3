@@ -1,8 +1,10 @@
 
-var mario = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
+var mario = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 12, 13, 14, 15, 10];
+
+var BACKGROUND = "url('puzzle2.jpg')";
 
 function isAdjacentByIndex(index){
-	console.log("ENTRY: isAdjacentByIndex");
+	//console.log("ENTRY: isAdjacentByIndex");
 	
 	var adj = false;
 	var zeroLoc = 0;
@@ -28,7 +30,7 @@ function isAdjacentByIndex(index){
 			adj = true;
 		}
 	}
-	console.log("EXIT: isAdjacentByIndex");
+	//console.log("EXIT: isAdjacentByIndex");
 	return adj;
 }
 
@@ -106,20 +108,90 @@ function printArray(){
 	console.log(arr);
 }
 
-function display(){
+function getBackgroundPosition(value){
+	var arr = 	["-300px -300px", //blank space
+				"0px 0px", "-100px 0px", "-200px 0px", "-300px 0px", 
+				"0px -100px", "-100px -100px", "-200px -100px", "-300px -100px",
+				"0px -200px", "-100px -200px", "-200px -200px", "-300px -200px", 
+				"0px -300px", "-100px -300px", "-200px -300px"
+				];
+				
+	return arr[value];
+}
+
+function display(){		//initially display the puzzle in correct order
 	console.log("ENTRY: display");
-	document.getElementById("picture").innerHTML = "<tr><td>hi</td></tr>";
+	var temp = "";
+	temp += "<tr>";
+	var x = 1;
+	var y = 1;
+	for(var i = 0; i < mario.length; i++){
+
+		if(i%4 == 0 && i != 0){
+			temp += "</tr>";
+			temp += "<tr>";
+			y = 1;
+			x++;
+		}
+		temp += "<td id = '" + x + y + "'>" + "</td>";
+		y++;
+	}
+	temp += "</tr>";
+	document.getElementById("picture").innerHTML = temp;
 	
-	
-	
+	randomize();
+	redisplay(); //remove
 	
 	console.log("EXIT: display");
 }
 
+function redisplay(){
+	console.log("ENTRY: redisplay");
+	var i = 0;
+	for (var x = 1; x <= 4; x++){
+		for (var y = 1; y <= 4; y++){
+			var xy = x.toString() + y.toString();
+			if (mario[i] == 0){		//removing background for empty space
+				document.getElementById(xy).style.backgroundImage = "none";
+			}
+			else {
+				document.getElementById(xy).style.backgroundImage = BACKGROUND;
+			}
+			
+			var hover = "#" + xy;
+			if(isAdjacentByIndex(i)){	//make adjacent tiles clickable and hover
+					$(hover).addClass("clickable");
+			}
+			else {
+				$(hover).removeClass("clickable");
+			}
+			//set background position
+			document.getElementById(xy).style.backgroundPosition = getBackgroundPosition(mario[i]);
+			i++;
+		}
+	}
+	console.log("EXIT: redisplay");
+}
 
+$(document).ready(function(){
+	
+	$(".clickable").click(function(){
+		var i = 0;
+		for (var x = 1; x <= 4; x++){
+			for (var y = 1; y <= 4; y++){
+				var xy = x.toString() + y.toString();
+				console.log(xy);
+				var hover = "#" + xy;
+		
+		
+		
+				i++;
+			}
+		}
+		
+	});
 
-
-
+});
 
 
 

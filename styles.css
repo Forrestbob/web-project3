@@ -3,5 +3,16 @@ body{
 }
 
 table {
+	border-collapse: collapse;
+}
 
+td {
+	border: 4px solid black;
+	height: 96px;
+	width: 96px;
+
+}
+
+td.clickable:hover{
+	opacity: 0.5;
 }
