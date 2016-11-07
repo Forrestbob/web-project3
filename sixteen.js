@@ -150,7 +150,7 @@ function display(){		//initially display the puzzle in correct order
 			y = 1;
 			x++;
 		}
-		temp += "<td id = '" + x + y + "'>" + "</td>";
+		temp += "<td id = '" + x + y + "'>" + mario[i] + "</td>";
 		y++;
 	}
 	temp += "</tr>";
