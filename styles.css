@@ -1,6 +1,12 @@
 body{
-	text-align: center;
+
 	font-family: "Comic Sans MS", cursive, sans-serif;
+	width: 800px;
+	margin: auto;
+}
+
+h1{
+	text-align: center;
 }
 
 table {
@@ -26,6 +32,9 @@ td.clickable:hover{
 }
 
 button {
+	text-align: center;
+	margin: auto;
+	display: block;
 	padding: 12px 22px;
 	border: none;
 	color: white;
@@ -33,3 +42,12 @@ button {
 	font-size: 16px;
 	border-radius: 3px;
 }
+
+button:hover {
+	background-color: #4da6ff;
+}
+
+.w3{
+	text-align: right;
+}
+

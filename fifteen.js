@@ -188,6 +188,10 @@ function display(){		//initially display the puzzle in correct order
 			swapByIndex(getTileIndex(this.id));
 			display();
 			console.log("click!");
+			
+			$(this.id).animate({
+				left: '250px',
+			}, "slow");
 		}
 	});
 	
