@@ -1,210 +1,265 @@
-var img = new Image()
 
-img.src = "puzzle.jpg"  
-var rows = 4 
-var cols = 4 
-var img_width = 400 
-var img_height = 400
-var offsetleft = 0 
-var offsettop = 10 
+var mario = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0];
 
+var BACKGROUND = "url('background.jpg')";
 
-var text1 = "Shuffle" 
-var text2 = "Congratulations you solved the puzzle in:"  
-
-
-
-var over = false;
-var arr = new Array()
-var time
-var tm = null
-var start = false
-var str = "";
-
-document.write("<div style='vertical-align:bottom;position:relative;top:"+offsettop+";left:"+offsetleft+";height:"+(img_height+50)+";width="+img_width+"' valign=bottom><form name=frm_info>")
-document.write("<table><tr><td style='vertical-align:bottom;height:"+(img_height+50)+";width="+(img_width/3)+"'>")
-var teller = 0
-var piece = new Array()
-for(i=0; i < cols; i++){
-	stop = rows 
-	arr[i] = new Array()
-	if((i+1) == cols) stop--;
-	for(j=0;j< stop; j++){
-		l = Math.round((img_width/cols)*(i));
-		t = Math.round((img_height/rows)*(j)) ;
-		id = "i_"+i+"j_"+j
-		arr[i][j] = new Array("",l,t,false);
-		document.write("<div  style='height:"+Math.round((img_height/rows))+";overflow:hidden;position:absolute;left:"+l+";top:"+t+";z-index:10;width:"+Math.round((img_width/cols))+"' id='"+ id +"' onclick=set('"+this.id+"') ><img src='"+img.src+"' style='position:absolute;top:"+(-t)+";left:"+(-l)+"'></div>")
-		piece[teller] =  new Array(id,l,t,false,teller)
-		teller++;
-	}
-}
-
-var l = ((img_width/cols)*(cols-1));
-var t = (img_height/rows)*(rows-1) ;
-var hteller = teller;
-arr[(cols-1)][(rows-1)] = new Array("",l,t);
-piece[teller] =  new Array("B",0,0,false,teller)
-document.write("<input type= button value='"+text1+"' onclick='resets()' class=pbutton></td><td style='vertical-align:bottom;height:"+(img_height+50)+";width="+(img_width/3)+"' align=middle><div id=txttimer class=ptext>00:00:00</div></td><td style='vertical-align:bottom;height:"+(img_height+50)+";width="+(img_width/3)+"' align=right><div id=txtgood class=ptext></div></td></tr></table></form></div>")
-teller--;
-
-function resets(){
-	start = true;
-	time = new Date()
-	arr[(cols-1)][(rows-1)] = new Array("",l,t);
-	piece[hteller] =  new Array("B",0,0,false,hteller)
-	for(i=0;i<=teller;i++) piece[i][3] = false
-	shuffler();
-	checker();
-	set_time();
-}
-
-
-
-function set_time(){
-	temp = new Date()
-	between = Math.round((temp-time)/1000)
-	sec = between%60
-	min = Math.floor((between-sec)/60)
-	hou = Math.floor(min/60)
-	min = min%60;
-	if (sec < 10) sec = "0"+ sec;
-	if (min < 10) min = "0"+ min;
-	if (hou < 10) hou = "0"+ hou;
-	str = hou+":"+min+":"+sec;
-	document.getElementById("txttimer").innerHTML = str
-	if(start)tm = setTimeout("set_time()",1000);
-}
-
-
-
-function shuffler(){
-	for(i=0;i<cols;i++){ 
-		stop = rows 
-		if((i+1) == cols) stop--;
-		for(j=0;j<stop;j++){
-			ok = false
-			while(ok == false){
-				check = Math.floor((teller*Math.random())+0.5)
-				id = "i_"+i+"j_"+j
-				if((piece[check][3] == false)){
-					piece[check][3] = true
-					mob = document.getElementById(id).style;
-
-					mob.left = piece[check][1] +"px";
-					mob.top = piece[check][2] +"px";
-					arr[i][j][0] = piece[check][0];
-					arr[i][j][3] = get_jpos(piece[check][0],i,j)
-					ok = true
-				}
-			}
+function isAdjacentByIndex(index){
+	//console.log("ENTRY: isAdjacentByIndex");
+	
+	var adj = false;
+	var zeroLoc = 0;
+	
+	for (var i = 0; i < mario.length; i++) {
+		if (mario[i] == 0){
+			zeroLoc = i;
 		}
 	}
-}
-
-
-
-function get_jpos(over,i,j){
-	jpos = over.indexOf("j")
-	ipos = parseInt(over.substr(2,(jpos-2)));
-	jpos = parseInt(over.substr((jpos+2),(over.length -(jpos+2))))
-	if((i == ipos) && (j==jpos)) return true
-	else return false
-}
-
-
-
-function check_blank(i,j){
-	if ((i == (cols-1)) && (j == (rows-1))) return true
-	else return false
-}
-
-
-
-function set(id){
-	if(!start){
-		return false
-	}
-	i = Math.round(parseInt(document.getElementById(id).style.left)/(img_width/cols))
-	j = Math.round(parseInt(document.getElementById(id).style.top)/(img_height/rows))
-	if(i != (cols-1)){
-		if(arr[i+1][j]){
-			if(arr[i+1][j][0] == ""){
-				document.getElementById(id).style.left = arr[i+1][j][1]
-				document.getElementById(id).style.top = arr[i+1][j][2]
-				arr[i+1][j][0] = id
-				arr[i][j][0] = ""
-				arr[i][j][3] = check_blank(i,j)
-				hi = i+1
-				arr[i+1][j][3] = get_jpos(id,hi,j)
-			}
+	
+	if (index == 3 || index == 7 || index == 11){
+		if (index - zeroLoc == 1 || Math.abs(index - zeroLoc) == 4){			//-4, -1, or +4
+			adj = true;
 		}
 	}
-	if(j != (rows-1)){
-		if(arr[i][j+1]){
-			if(arr[i][j+1][0] == ""){
+	else if (index == 4 || index == 8 || index == 12){
+		if (index - zeroLoc == -1 || Math.abs(index - zeroLoc) == 4){			//-4, 1, or +4
+			adj = true;
+		}
+	}
+	else{
+		if (Math.abs(index - zeroLoc) == 1 || Math.abs(index - zeroLoc) == 4){	//-4, -1, +1, or +4
+			adj = true;
+		}
+	}
+	//console.log("EXIT: isAdjacentByIndex");
+	return adj;
+}
+
+function isAdjacentByValue(number){
+	
+	var adj = false;
+	var zeroLoc = 0;
+	var index = 0;
+	
+	for (var i = 0; i < mario.length; i++) {
+		if (mario[i] == 0){
+			zeroLoc = i;
+		}
+		if (mario[i] == number){
+			index = i;
+		}
+	}
+	
+	if (index == 3 || index == 7 || index == 11){
+		if (index - zeroLoc == 1 || Math.abs(index - zeroLoc) == 4){			//-4, -1, or +4
+			adj = true;
+		}
+	}
+	else if (index == 4 || index == 8 || index == 12){
+		if (index - zeroLoc == -1 || Math.abs(index - zeroLoc) == 4){			//-4, 1, or +4
+			adj = true;
+		}
+	}
+	else{
+		if (Math.abs(index - zeroLoc) == 1 || Math.abs(index - zeroLoc) == 4){	//-4, -1, +1, or +4
+			adj = true;
+		}
+	}
+	return adj;
+}
+
+function swapByIndex(a){	//swaps an element with the 0 cell by index
+	//console.log("ENTRY: swapByIndex");
+	var zeroLoc = 0;
+	
+	for (var i = 0; i < mario.length; i++) {
+		if (mario[i] == 0){
+			zeroLoc = i;
+		}
+	}
+	var a_value = mario[a];
+	
+	mario[zeroLoc] = a_value; 
+	mario[a] = 0;
+	//console.log("EXIT: swapByIndex");
+}
+
+function randomize(){		//this will always create a solvable result
+	console.log("ENTRY: randomize");
+	var swaps = 0;
+	
+	//printArray();
+	
+	while (swaps < 1000) {	//1000 swaps
+		var randNum = Math.floor((Math.random() * 16));	// between [0,15] (inclusive)
+		if (isAdjacentByIndex(randNum)){
+			swapByIndex(randNum);
+			swaps++;
+		}
+	}
+	console.log("EXIT: randomize");
+	//printArray();
+}
+
+function printArray(){
+	var arr = "";
+	for(var i = 0; i < mario.length; i++){
+		arr += mario[i] + " ";
+	}
+	console.log(arr);
+}
+
+function getBackgroundPosition(value){
+	var arr = 	["-300px -300px", //blank space
+				"0px 0px", "-100px 0px", "-200px 0px", "-300px 0px", 
+				"0px -100px", "-100px -100px", "-200px -100px", "-300px -100px",
+				"0px -200px", "-100px -200px", "-200px -200px", "-300px -200px", 
+				"0px -300px", "-100px -300px", "-200px -300px"
+				];
 				
-				document.getElementById(id).style.left = arr[i][j+1][1]
-				document.getElementById(id).style.top = arr[i][j+1][2]
-				arr[i][j+1][0] = id
-				arr[i][j][0] = ""
-				arr[i][j][3] = check_blank(i,j)
-				hj = j+1
-				arr[i][j+1][3] = get_jpos(id,i,hj)
-			}
-		}
-	}
-	if(i != 0){
-		if(arr[i-1][j]){
-			if(arr[i-1][j][0] == "") {
-				document.getElementById(id).style.left = arr[i-1][j][1]
-				document.getElementById(id).style.top = arr[i-1][j][2]
-				arr[i-1][j][0] = id
-				arr[i][j][0] = ""
-				arr[i][j][3] = check_blank(i,j)
-				hi = i-1
-				arr[i-1][j][3] = get_jpos(id,hi,j)
-			}
-		}
-	}
-	if(j != 0){
-		if(arr[i][j-1]){
-			if(arr[i][j-1][0] == "") {
-				document.getElementById(id).style.left = arr[i][j-1][1]
-				document.getElementById(id).style.top = arr[i][j-1][2]
-				arr[i][j-1][0] = id
-				arr[i][j][0] = ""
-				arr[i][j][3] = check_blank(i,j)
-				hj = j-1
-				arr[i][j-1][3] = get_jpos(id,i,hj)
-			}
-		}
-	}
-	checker();
+	return arr[value];
 }
 
-
-
-function checker(){
-	good = 0
-	further = true
-	for(i=0;i<cols;i++){
-		for(j=0;j<rows;j++){
-			if(arr[i][j][3] == false) {
-				further = false;
+function getTileIndex(position){	//takes in a string such as "23" - row 2 column 3
+	var index = 0;					//returns index of mario[]
+	var arr = position.split("");
+	x_dim = parseInt(arr[0]);
+	y_dim = parseInt(arr[1]);
+	var i = 0;
+	for (var x = 1; x <= 4; x++){
+		for (var y = 1; y <= 4; y++){
+			if (x == x_dim && y == y_dim){
+				index = i;
 			}
-			else good++;
+			i++;
 		}
 	}
-	strgood = good +"/"+ (rows*cols)
-	if(!start) strgood = (rows*cols)+"/"+(rows*cols)
-	document.getElementById("txtgood").innerHTML = strgood
-	if(further) {
-		clearTimeout(tm);
-		start = false
-		document.forms.submitscore.score.value = str;
-		document.forms.submitscore.submit();
-		alert(text2 + str);
-	}
+	return index;
 }
-checker();
+
+function display(){		//initially display the puzzle in correct order
+	console.log("ENTRY: display");
+	var temp = "";
+	temp += "<tr>";
+	var x = 1;
+	var y = 1;
+	for(var i = 0; i < mario.length; i++){
+
+		if(i%4 == 0 && i != 0){
+			temp += "</tr>";
+			temp += "<tr>";
+			y = 1;
+			x++;
+		}
+		temp += "<td id = '" + x + y + "'>" + mario[i] + "</td>";
+		y++;
+	}
+	temp += "</tr>";
+	document.getElementById("picture").innerHTML = temp;
+	
+	//randomize();
+	//redisplay(); //remove
+	
+		//console.log("ENTRY: redisplay");
+	var i = 0;
+	for (var x = 1; x <= 4; x++){
+		for (var y = 1; y <= 4; y++){
+			var xy = x.toString() + y.toString();
+			if (mario[i] == 0){		//removing background for empty space
+				document.getElementById(xy).style.backgroundImage = "none";
+				document.getElementById(xy).style.backgroundColor = "black";
+			}
+			else {
+				document.getElementById(xy).style.backgroundImage = BACKGROUND;
+			}
+			
+			var hover = "#" + xy;
+			$(hover).removeClass("clickable");
+			if(isAdjacentByIndex(i)){	//make adjacent tiles clickable and hover
+					$(hover).addClass("clickable");
+			}
+			//set background position
+			document.getElementById(xy).style.backgroundPosition = getBackgroundPosition(mario[i]);
+			i++;
+		}
+	}
+	
+	$(".clickable").click(function(){	//make adjacent tiles clickable
+		if (isAdjacentByIndex(getTileIndex(this.id))){
+			swapByIndex(getTileIndex(this.id));
+			display();
+			console.log("click!");
+		}
+	});
+	
+	//console.log("EXIT: redisplay");
+	
+	console.log("EXIT: display");
+}
+
+/*
+function redisplay(){
+	//console.log("ENTRY: redisplay");
+	var i = 0;
+	for (var x = 1; x <= 4; x++){
+		for (var y = 1; y <= 4; y++){
+			var xy = x.toString() + y.toString();
+			if (mario[i] == 0){		//removing background for empty space
+				document.getElementById(xy).style.backgroundImage = "none";
+				document.getElementById(xy).style.backgroundColor = "black";
+			}
+			else {
+				document.getElementById(xy).style.backgroundImage = BACKGROUND;
+			}
+			
+			var hover = "#" + xy;
+			$(hover).removeClass("clickable");
+			if(isAdjacentByIndex(i)){	//make adjacent tiles clickable and hover
+					$(hover).addClass("clickable");
+			}
+			//set background position
+			document.getElementById(xy).style.backgroundPosition = getBackgroundPosition(mario[i]);
+			i++;
+		}
+	}
+	
+	$(".clickable").click(function(){	//make adjacent tiles clickable
+		if (isAdjacentByIndex(getTileIndex(this.id))){
+			swapByIndex(getTileIndex(this.id));
+			redisplay();
+			console.log("click!");
+		}
+	});
+	
+	//console.log("EXIT: redisplay");
+}
+*/
+
+/*								//only works once
+$(document).ready(function(){
+	$(".clickable").click(function(){
+		console.log("click!");
+		//console.log(getTileValue(this.id));
+		swapByIndex(getTileIndex(this.id));
+		redisplay();
+	});
+});
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
